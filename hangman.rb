@@ -10,11 +10,13 @@ def accepted
 end
 
 class Hangman
+  @@game_over = false
   @@guess = ''
   @@target = accepted.sample
   @@attempts = 10
   @@unknown = Array.new(@@target.length, '-')
   @@alphabet = 'abcdefghijklmnopqrstuvwxyz'
+  @@discarded_letter_array = []
 
   def self.start_game
     puts "\nWelcome to a game of Hangman! Ready for a challenge?\n\n"
@@ -25,10 +27,28 @@ class Hangman
   end
 
   def self.check_guess
-    if @@guess.length != 1 || @@alphabet.split('').include?(@@guess) == false
-      puts 'invalid input...'
+    while @@game_over == false && @@attempts > 0
+      if @@guess.length != 1 || !@@alphabet.split('').include?(@@guess.downcase)
+        puts "invalid input, try another letter\n"
+        play_game
+      else
+        @@attempts -= 1
+        game_progress
+      end
+    end
+  end
+
+  def self.discard_letter
+    if @@alphabet.include?(@@guess.downcase) == false && @@discarded_letter_array.include?(@@guess.downcase) == false
+      @@discarded_letter_array.push(@@guess)
+    end
+  end
+
+  def self.game_progress
+    if @@target.split('').include?(@@guess)
+      puts 'true'
     else
-      puts 'valid input'
+      puts 'false'
     end
   end
 
