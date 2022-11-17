@@ -13,7 +13,7 @@ class Hangman
   @@game_over = false
   @@guess = ''
   @@target = accepted.sample.split('')
-  @@attempts = 10
+  @@attempts = 5
   @@unknown = Array.new(@@target.length, '-')
   @@alphabet = 'abcdefghijklmnopqrstuvwxyz'
   @@discarded_letter_array = []
@@ -32,15 +32,28 @@ class Hangman
     while @@game_over == false
       @@guess = gets.chomp
       check_guess
+      game_is_over
+    end
+  end
+
+  def self.game_is_over
+    if @@attempts == 0
+      puts "You've lost. Game Over..."
+      @game_over = true
     end
   end
 
   def self.check_guess
     if @@target.include?(@@guess)
-      puts 'good'
+      @@accepted_letters_array.push(@@guess)
+      @@target.each_with_index do |v, i|
+        @@unknown[i] = v if v == @@guess
+      end
     else
-      puts 'bad'
+      @@discarded_letter_array.push(@@guess)
+      @@attempts -= 1
     end
+    p @@unknown
   end
 end
 Hangman.start_game
