@@ -33,9 +33,14 @@ class Hangman
     while @@game_over == false
       puts @@unknown.join('')
       @@guess = gets.chomp
-      if @@guess == 'load'
-        load_game
-        break
+      begin
+        if @@guess == 'load'
+          load_game
+          break
+        end
+      rescue StandardError
+        puts 'Try playing the game first...bro...'
+        next
       end
       if @@guess == 'save'
         save
